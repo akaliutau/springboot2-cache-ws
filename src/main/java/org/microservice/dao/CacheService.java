@@ -14,7 +14,7 @@ public class CacheService {
 	public final long scanRate = 120000L;
 
 	@Autowired
-	private HibernateService hibernateService;
+	private HibernateServiceImpl hibernateService;
 
 	@Autowired
 	private  CacheSettings cacheSettings;
@@ -54,12 +54,17 @@ public class CacheService {
 		if (DMLProcessing)
 			return;
 		DMLProcessing = true;
-		Long counted = (Long) hibernateService.execute(OperationType.COUNT_EXPIRED);
+		try {
+		Long counted = (Long) hibernateService.execute(OperationType.COUNT_EXPIRED, cacheSettings.getLifeTime());
 		if (counted > 0) {
-			Integer deleted = (Integer) hibernateService.execute(OperationType.DELETE_EXPIRED);
+			Integer deleted = (Integer) hibernateService.execute(OperationType.DELETE_EXPIRED, cacheSettings.getLifeTime());
 			decNumberKeys(deleted);
 		}
+		}catch(Exception e) {
+			
+		}
 		DMLProcessing = false;
+		
 	}
 
 	public synchronized void incNumberKeys(Integer i) {

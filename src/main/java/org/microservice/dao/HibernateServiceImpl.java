@@ -10,32 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HibernateService {
-	private final Long lifeTime;
+public class HibernateServiceImpl {
 
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
 
 	private OperationFactory operationFactory;
 
-	public HibernateService(Long lifeTime, OperationFactory operationFactory) {
-		this.lifeTime = lifeTime;
-		this.operationFactory = operationFactory;
+	public HibernateServiceImpl() {
+		this.operationFactory = new OperationFactory();;
 	}
 
 	public Object execute(OperationType operationType) {
-		Session session = getCurrentSession();
 		Transaction tr = null;
 		Object result = null;
 		try {
+			Session session = getCurrentSession();
 			tr = session.beginTransaction();
 			if (operationType.equals(OperationType.FIND_OLDEST)) {
 				result = operationFactory.findOldest(session);
-			} else if (operationType.equals(OperationType.COUNT_EXPIRED)) {
-				result = operationFactory.countDead(session, lifeTime);
-			} else if (operationType.equals(OperationType.DELETE_EXPIRED)) {
-				result = operationFactory.deleteDead(session, lifeTime);
-			}
+			} 
 			tr.commit();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -47,10 +41,10 @@ public class HibernateService {
 	}
 
 	public Object execute(OperationType operationType, Object arg1) {
-		Session session = getCurrentSession();
 		Transaction tr = null;
 		Object result = null;
 		try {
+			Session session = getCurrentSession();
 			tr = session.beginTransaction();
 			System.out.println(operationType);
 			if (operationType.equals(OperationType.SEARCH_BY_KEY)) {
@@ -59,6 +53,10 @@ public class HibernateService {
 				result = operationFactory.deleteById(session, (Long) arg1);
 			} else if (operationType.equals(OperationType.UPSERT)) {
 				result = operationFactory.upsert(session, (Pair) arg1);
+			}else if (operationType.equals(OperationType.COUNT_EXPIRED)) {
+				result = operationFactory.countExpired(session, (Long) arg1);
+			} else if (operationType.equals(OperationType.DELETE_EXPIRED)) {
+				result = operationFactory.deleteExpired(session, (Long) arg1);
 			}
 			tr.commit();
 		} catch (Exception e) {

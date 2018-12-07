@@ -1,11 +1,11 @@
 package org.microservice.configuration;
 
+import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import javax.sql.DataSource;
-import org.microservice.dao.HibernateService;
-import org.microservice.dao.OperationFactory;
+import org.microservice.dao.HibernateServiceImpl;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -14,6 +14,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -31,20 +34,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackages = { "org.microservice" })
 public class ServerConfiguration implements AsyncConfigurer, SchedulingConfigurer {
 	
-	// expiration time for keys in ms
-	private final Long lifeTime = 300000L;
-	private final Integer maxNumberOfKeys = 100;
 
 	@Bean
 	CacheSettings cacheSettings() {
-		CacheSettings cacheSettings = new CacheSettings(maxNumberOfKeys);
+		CacheSettings cacheSettings = new CacheSettings();
 		return cacheSettings;
 	}
 
 	@Bean
-	HibernateService hibernateService() {
-		OperationFactory operationFactory = new OperationFactory();
-		HibernateService hibernateService = new HibernateService(lifeTime, operationFactory);
+	HibernateServiceImpl hibernateService() {
+		HibernateServiceImpl hibernateService = new HibernateServiceImpl();
 		return hibernateService;
 	}
 
@@ -76,15 +75,42 @@ public class ServerConfiguration implements AsyncConfigurer, SchedulingConfigure
 	}
 
 
-	@Bean
-	public DataSource getDataSource() {
-		DriverManagerDataSource ds = new DriverManagerDataSource();
-		ds.setDriverClassName("org.h2.Driver");
-		ds.setUrl("jdbc:h2:mem");
-		ds.setUsername("sa");
-		ds.setPassword("");
-		return ds;
+	public Properties getJPAProp() {
+		Properties prop = new Properties();
+		prop.setProperty("hibernate.current_session_context_class", "org.hibernate.context.internal.ThreadLocalSessionContext");
+		return prop;
 	}
+
+	
+	 @Bean("entityManagerFactory")
+	  public LocalContainerEntityManagerFactoryBean systemEntityManagerFactory() {
+	    LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+	    entityManagerFactoryBean.setPackagesToScan("org.microservice");
+	    entityManagerFactoryBean.setPersistenceUnitName("system");
+	    entityManagerFactoryBean.setDataSource(systemDataSource());
+	    entityManagerFactoryBean.setJpaProperties(getJPAProp());
+
+	    HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+	    adapter.setDatabase(Database.H2);
+	    adapter.setShowSql(true);
+	    adapter.setGenerateDdl(true);
+
+	    entityManagerFactoryBean.setJpaVendorAdapter(adapter);
+
+	    return entityManagerFactoryBean;
+	  }
+
+	  @Bean
+	  DataSource systemDataSource() {
+	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+	    dataSource.setDriverClassName("org.h2.Driver");
+	    dataSource.setUrl("jdbc:h2:./test");
+	    dataSource.setUsername("sa");
+	    dataSource.setPassword("");
+
+	    return dataSource;
+	  }
+
 
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {

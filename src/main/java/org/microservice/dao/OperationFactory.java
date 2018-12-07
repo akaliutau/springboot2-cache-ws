@@ -27,14 +27,14 @@ public class OperationFactory {
 		return res;
 	}
 
-	public Long countDead(Session session, Long lifeTime) {
+	public Long countExpired(Session session, Long lifeTime) {
 		Long timestamp = Instant.now().toEpochMilli() - lifeTime;
 		Long res = session.createQuery("select count(*) from Cached c where c.timestamp < :timestamp", Long.class)
 				.setParameter("timestamp", timestamp).getSingleResult();
 		return res;
 	}
 
-	public Integer deleteDead(Session session, Long lifeTime) {
+	public Integer deleteExpired(Session session, Long lifeTime) {
 		Long timestamp = Instant.now().toEpochMilli() - lifeTime;
 		Integer res = session.createQuery("delete from Cached c where c.timestamp < :timestamp")
 				.setParameter("timestamp", timestamp).executeUpdate();

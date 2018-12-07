@@ -21,13 +21,22 @@ In order to  compile and deploy these applications the following software is nee
 * Java JDK 1.8
 
 
+Building
+===========
+mvn clean package
+
+Running
+===========
+java -jar <path to jar file>
+
+
 Rest service is available at the following end points (base URI is omitted):
 ______________________________________________________________
-No.		URI			HTTP Method	
+No.				URI						HTTP Method	
 ______________________________________________________________
-0		/			POST		
+0				/						POST		
 
-1		/{key}			GET			
+1				/{key}					GET			
 ______________________________________________________________
 
 
