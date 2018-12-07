@@ -27,14 +27,14 @@ mvn clean package
 
 Running
 ===========
-java -jar <path to jar file>
+java -jar <i>path to jar file</i>
 
 
 Rest service is available at the following end points (base URI is omitted):
 ______________________________________________________________
 No.				URI						HTTP Method	
 ______________________________________________________________
-0				/						POST		
+0				/						    POST		
 
 1				/{key}					GET			
 ______________________________________________________________
