@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan("org.microservice")
 @EntityScan(basePackages = { "org.microservice" })
 public class ServerConfiguration implements AsyncConfigurer, SchedulingConfigurer {
-	
 
 	@Bean
 	CacheSettings cacheSettings() {
@@ -74,43 +73,41 @@ public class ServerConfiguration implements AsyncConfigurer, SchedulingConfigure
 		return Executors.newScheduledThreadPool(10);
 	}
 
-
 	public Properties getJPAProp() {
 		Properties prop = new Properties();
-		prop.setProperty("hibernate.current_session_context_class", "org.hibernate.context.internal.ThreadLocalSessionContext");
+		prop.setProperty("hibernate.current_session_context_class",
+				"org.hibernate.context.internal.ThreadLocalSessionContext");
 		return prop;
 	}
 
-	
-	 @Bean("entityManagerFactory")
-	  public LocalContainerEntityManagerFactoryBean systemEntityManagerFactory() {
-	    LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-	    entityManagerFactoryBean.setPackagesToScan("org.microservice");
-	    entityManagerFactoryBean.setPersistenceUnitName("system");
-	    entityManagerFactoryBean.setDataSource(systemDataSource());
-	    entityManagerFactoryBean.setJpaProperties(getJPAProp());
+	@Bean("entityManagerFactory")
+	public LocalContainerEntityManagerFactoryBean systemEntityManagerFactory() {
+		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+		entityManagerFactoryBean.setPackagesToScan("org.microservice");
+		entityManagerFactoryBean.setPersistenceUnitName("system");
+		entityManagerFactoryBean.setDataSource(systemDataSource());
+		entityManagerFactoryBean.setJpaProperties(getJPAProp());
 
-	    HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-	    adapter.setDatabase(Database.H2);
-	    adapter.setShowSql(true);
-	    adapter.setGenerateDdl(true);
+		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+		adapter.setDatabase(Database.H2);
+		adapter.setShowSql(true);
+		adapter.setGenerateDdl(true);
 
-	    entityManagerFactoryBean.setJpaVendorAdapter(adapter);
+		entityManagerFactoryBean.setJpaVendorAdapter(adapter);
 
-	    return entityManagerFactoryBean;
-	  }
+		return entityManagerFactoryBean;
+	}
 
-	  @Bean
-	  DataSource systemDataSource() {
-	    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	    dataSource.setDriverClassName("org.h2.Driver");
-	    dataSource.setUrl("jdbc:h2:./test");
-	    dataSource.setUsername("sa");
-	    dataSource.setPassword("");
+	@Bean
+	DataSource systemDataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("org.h2.Driver");
+		dataSource.setUrl("jdbc:h2:./test");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("");
 
-	    return dataSource;
-	  }
-
+		return dataSource;
+	}
 
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {

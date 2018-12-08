@@ -14,7 +14,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 // @Indexed
-@Table(name = "cache",  uniqueConstraints = { @UniqueConstraint(columnNames = "id") }, indexes = {
+@Table(name = "cache", uniqueConstraints = { @UniqueConstraint(columnNames = "id") }, indexes = {
 		@Index(name = "IDX_1", columnList = "id,key") })
 public class Cached {
 	@Id

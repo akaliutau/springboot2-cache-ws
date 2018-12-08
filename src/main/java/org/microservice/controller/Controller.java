@@ -9,8 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * This is a web service class which will be exposed for rest service.
- * The annotation @RequestMapping is used at method level for Rest Web Service URL mapping.
+ * This is a web service class which will be exposed for rest service. The
+ * annotation @RequestMapping is used at method level for Rest Web Service URL
+ * mapping.
  * 
  * @author Alex Kalutov
  * @since Version 1.0
@@ -22,9 +23,10 @@ public class Controller {
 	private CacheService cacheService;
 
 	/**
-	 * The method to add the pair (key=>value) to cache
+	 * The method to get the pair (key=>value) from cache
 	 *
-	 * @param key - the key of pair 
+	 * @param key
+	 *            - the key of pair
 	 * @return Pair
 	 */
 	@RequestMapping(value = "/{key}", method = RequestMethod.GET)
@@ -39,7 +41,7 @@ public class Controller {
 	 * The method to add the pair (key=>value) to cache
 	 * 
 	 * @param pair
-	 * @return
+	 * @return Pair
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity<Pair> addPair(@RequestBody Pair pair) {

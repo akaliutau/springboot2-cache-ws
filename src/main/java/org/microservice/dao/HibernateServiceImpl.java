@@ -18,7 +18,7 @@ public class HibernateServiceImpl {
 	private OperationFactory operationFactory;
 
 	public HibernateServiceImpl() {
-		this.operationFactory = new OperationFactory();;
+		this.operationFactory = new OperationFactory();
 	}
 
 	public Object execute(OperationType operationType) {
@@ -29,7 +29,7 @@ public class HibernateServiceImpl {
 			tr = session.beginTransaction();
 			if (operationType.equals(OperationType.FIND_OLDEST)) {
 				result = operationFactory.findOldest(session);
-			} 
+			}
 			tr.commit();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -53,7 +53,7 @@ public class HibernateServiceImpl {
 				result = operationFactory.deleteById(session, (Long) arg1);
 			} else if (operationType.equals(OperationType.UPSERT)) {
 				result = operationFactory.upsert(session, (Pair) arg1);
-			}else if (operationType.equals(OperationType.COUNT_EXPIRED)) {
+			} else if (operationType.equals(OperationType.COUNT_EXPIRED)) {
 				result = operationFactory.countExpired(session, (Long) arg1);
 			} else if (operationType.equals(OperationType.DELETE_EXPIRED)) {
 				result = operationFactory.deleteExpired(session, (Long) arg1);
@@ -67,8 +67,8 @@ public class HibernateServiceImpl {
 		}
 		return result;
 	}
-	
-	public Session getCurrentSession(){
+
+	public Session getCurrentSession() {
 		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
 		return session;
 	}

@@ -1,5 +1,10 @@
 package org.microservice.configuration;
 
+/**
+ * Used to hold the global settings for server 
+ * @author Alex Kalutov
+ * @since Version 1.0
+ */
 public class CacheSettings {
 
 	// default values
@@ -27,7 +32,5 @@ public class CacheSettings {
 	public void setMaxNumberOfKeys(Integer maxNumberOfKeys) {
 		this.maxNumberOfKeys = maxNumberOfKeys;
 	}
-	
-	
 
 }

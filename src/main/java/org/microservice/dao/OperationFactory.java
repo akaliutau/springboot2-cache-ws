@@ -7,6 +7,12 @@ import org.hibernate.Session;
 import org.microservice.model.Cached;
 import org.microservice.model.Pair;
 
+/**
+ * Aggregation class containing query methods for abstract database
+ * 
+ * @author Alex Kalutov
+ * @since Version 1.0
+ */
 public class OperationFactory {
 
 	public OperationFactory() {
