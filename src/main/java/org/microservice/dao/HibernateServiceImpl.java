@@ -6,11 +6,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.microservice.model.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HibernateServiceImpl {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HibernateServiceImpl.class);
+
 
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
@@ -32,7 +37,7 @@ public class HibernateServiceImpl {
 			}
 			tr.commit();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 			if (tr != null && tr.isActive()) {
 				tr.rollback();
 			}
@@ -46,7 +51,7 @@ public class HibernateServiceImpl {
 		try {
 			Session session = getCurrentSession();
 			tr = session.beginTransaction();
-			System.out.println(operationType);
+			logger.debug(operationType.toString());
 			if (operationType.equals(OperationType.SEARCH_BY_KEY)) {
 				result = operationFactory.searchByKey(session, (String) arg1);
 			} else if (operationType.equals(OperationType.DELETE_BY_ID)) {
@@ -60,7 +65,7 @@ public class HibernateServiceImpl {
 			}
 			tr.commit();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 			if (tr != null && tr.isActive()) {
 				tr.rollback();
 			}

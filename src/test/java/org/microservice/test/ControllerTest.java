@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -29,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class})
 public class ControllerTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(ControllerTest.class);
 
 	private MockMvc mockMvc;
     String key = "key1";
@@ -93,7 +97,7 @@ public class ControllerTest {
     @Test
     public void testAdd() throws Exception {
     	
-      System.out.println(pairJson);	
+      logger.debug(pairJson);	
       mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON_UTF8).content(pairJson))
       .andExpect(status().is2xxSuccessful())
       .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

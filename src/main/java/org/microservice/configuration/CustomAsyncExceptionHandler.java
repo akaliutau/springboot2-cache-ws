@@ -2,17 +2,21 @@ package org.microservice.configuration;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 
+
 public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
+	private static final Logger logger = LoggerFactory.getLogger(CustomAsyncExceptionHandler.class);
 
 	@Override
 	public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
-		System.out.println("Exception message - " + throwable.getMessage());
-		System.out.println("Method name - " + method.getName());
+		logger.error("Exception message - " + throwable.getMessage());
+		logger.error("Method name - " + method.getName());
 
 		for (Object param : obj) {
-			System.out.println("Parameter value - " + param);
+			logger.debug("Parameter value - " + param);
 		}
 	}
 

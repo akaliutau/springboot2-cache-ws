@@ -1,5 +1,6 @@
 package org.microservice.test;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +15,8 @@ import org.microservice.dao.DMLType;
 import org.microservice.dao.OperationFactory;
 import org.microservice.model.Cached;
 import org.microservice.model.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PersistentLevelTests {
 
+	private static final Logger logger = LoggerFactory.getLogger(PersistentLevelTests.class);
 	
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
@@ -41,15 +45,12 @@ public class PersistentLevelTests {
 	}
 
 
-	
-    String key = "key1";
-    String value = "val1";
-    Pair pair = new Pair(key,value);
-
-
 	@Test
     @Rollback(true)
 	public void upsertTest() {
+		String key = "key1";
+		String value = "val1";
+		Pair pair = new Pair(key,value);
 		assertTrue(entityManagerFactory != null);
 		assertTrue(session != null);
 		Transaction tr = null;
@@ -72,6 +73,9 @@ public class PersistentLevelTests {
 	@Test
     @Rollback(true)
 	public void recordsCollectorTest() {
+		String key = "key2";
+		String value = "val2";
+		Pair pair = new Pair(key,value);
 		assertTrue(entityManagerFactory != null);
 		assertTrue(session != null);
 		Transaction tr = null;
@@ -83,12 +87,13 @@ public class PersistentLevelTests {
 		assertTrue(found != null);
 
 		
-		Long foundExpired = operationFactory.countExpired(session, 0L);
-		System.out.println("foundExpired="+foundExpired);
-		assertTrue(foundExpired == 1L);
+		long foundExpired = operationFactory.countExpired(session, 0L);
+		logger.debug("foundExpired="+foundExpired);
+		assertNotEquals(0L,foundExpired);
 		
-		Integer deletedExpired = operationFactory.deleteExpired(session, 0L);
-		assertTrue(deletedExpired == 1);
+		int deletedExpired = operationFactory.deleteExpired(session, 0L);
+		logger.debug("deletedExpired="+deletedExpired);
+		assertNotEquals(0,deletedExpired);
 		tr.commit();
 
 	}
