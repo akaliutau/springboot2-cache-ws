@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * annotation @RequestMapping is used at method level for Rest Web Service URL
  * mapping.
  * 
- * @author Alex Kalutov
+ * @author Aliaksei Kaliutau
  * @since Version 1.0
  */
 @RestController

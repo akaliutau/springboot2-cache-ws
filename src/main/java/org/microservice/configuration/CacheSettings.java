@@ -2,7 +2,7 @@ package org.microservice.configuration;
 
 /**
  * Used to hold the global settings for server 
- * @author Alex Kalutov
+ * @author Aliaksei Kaliutau
  * @since Version 1.0
  */
 public class CacheSettings {

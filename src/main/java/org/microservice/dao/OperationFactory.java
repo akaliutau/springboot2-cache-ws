@@ -10,7 +10,7 @@ import org.microservice.model.Pair;
 /**
  * Aggregation class containing query methods for abstract database
  * 
- * @author Alex Kalutov
+ * @author Aliaksei Kaliutau
  * @since Version 1.0
  */
 public class OperationFactory {
