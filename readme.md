@@ -29,6 +29,8 @@ Running
 ===========
 java -jar <i>path to jar file</i>
 
+The service will start on localhost:8080
+
 
 Rest service is available at the following end points (base URI is omitted):
 ______________________________________________________________
